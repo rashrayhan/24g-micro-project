@@ -1,0 +1,94 @@
+//=================================
+//             User
+//=================================
+
+//get all users
+GET http://localhost:4600/api/users/
+
+###
+//get user by ID
+GET http://localhost:4600/api/users/5ebc01846d2c1c5f48b97391
+
+###
+//post user
+POST http://localhost:4600/api/users/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Ryan Smith",
+    "email": "rsmith@24g.com"
+}
+
+
+//=================================
+//             Video
+//=================================
+
+###
+//get all videos
+GET http://localhost:4600/api/videos/
+
+###
+//get video by ID
+GET http://localhost:4600/api/videos/5ebbca32a2891f5a0c194f9d
+
+
+
+//=================================
+//             Comment
+//=================================
+###
+//post comment
+POST http://localhost:4600/api/comments/ HTTP/1.1
+content-type: application/json
+
+{
+    "commentTo": "5ebbca32a2891f5a0c194f9e",
+    "content": "3 Lorem ipsum as it is sometimes known, is a dummy text"
+}
+
+###
+//get comment by videoID
+GET http://localhost:4600/api/comments/5ebbca32a2891f5a0c194f9e
+
+
+//=================================
+//             Sentiments 
+//=================================
+
+###
+//Like a video
+POST http://localhost:4600/api/sentiments/savelike HTTP/1.1
+content-type: application/json
+
+{
+    "userId": "5ebc02886d2c1c5f48b97393",
+    "videoId": "5ebbca32a2891f5a0c194f9e"
+}
+
+###
+//get likes by videoID
+GET http://localhost:4600/api/sentiments/getlikes/5ebbca32a2891f5a0c194f9e
+
+###
+//unlike a video
+DELETE  http://localhost:4600/api/sentiments/unlike/5ebc02886d2c1c5f48b97393/5ebbca32a2891f5a0c194f9c
+
+
+###
+//Dislike a video
+POST http://localhost:4600/api/sentiments/savedisike HTTP/1.1
+content-type: application/json
+
+{
+    "userId": "5ebc02886d2c1c5f48b97393",
+    "videoId": "5ebbca32a2891f5a0c194f9d"
+}
+
+###
+//get dislikes by videoID
+GET http://localhost:4600/api/sentiments/getdislikes/5ebbca32a2891f5a0c194f9d
+
+###
+//undislike a video
+DELETE  http://localhost:4600/api/sentiments/undislike/5ebc02886d2c1c5f48b97393/5ebbca32a2891f5a0c194f9c
