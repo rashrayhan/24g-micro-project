@@ -8,6 +8,9 @@ const port = process.env.port || 4600;
 const fs = require("fs");
 const path = require("path");
 const morgan = require('morgan');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = swaggerJSDoc(require('./middlewares/swagger'));
 
 const app = express();
 
@@ -18,6 +21,8 @@ app.use(helmet());
 //logging to file
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
+//swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); 
 
 
 //Routes
