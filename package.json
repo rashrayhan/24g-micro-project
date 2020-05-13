@@ -1,0 +1,33 @@
+{
+  "name": "24g-micro-project",
+  "version": "1.0.0",
+  "description": "Vues.js and Node(express) powered micro-website for playing videos",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "devStart": "nodemon server/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rashrayhan/24g-micro-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rashrayhan/24g-micro-project/issues"
+  },
+  "homepage": "https://github.com/rashrayhan/24g-micro-project#readme",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "mongoose": "^5.9.13",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.3"
+  }
+}
