@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const dislikeSchema = mongoose.Schema({
     userId: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        default: '5ebc02886d2c1c5f48b97393'
     },
     videoId: {
         type: Schema.Types.ObjectId,
