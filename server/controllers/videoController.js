@@ -14,7 +14,7 @@ module.exports.getVideos = async (req, res) =>{
 //get video by ID
 module.exports.getVideoById = async (req, res)=>{
     try {
-        const video = await Video.findById({_id: req.params.id});
+        const video = await Video.findByIdAndUpdate({_id: req.params.id}, { $inc: { views: 1 }});
         res.status(200).json(video);
     } catch (error) {
         res.status(500).json({message: error.message});

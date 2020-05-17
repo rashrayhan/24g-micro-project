@@ -15,26 +15,36 @@
 
     <mdb-row class="cw-vid-title">
       <mdb-col>
-          <h3>{{videos[0].title}}</h3>
+          <h3 v-if="!flag">{{videos[0].title}}</h3>
+          <h3 v-if="flag">{{video.title}}</h3>
       </mdb-col>
     </mdb-row>
 
     <mdb-row class="cw-vid-grid">
       <!-- main grid -->
       <mdb-col md="9" class=" mb-3 main-grid">
-        <video class="video-fluid z-depth-1 mb-2" autoplay loop controls>
-          <source v-bind:src="videos[1].video" type="video/mp4" />
+         <video v-if="!flag" class="video-fluid z-depth-1 mb-2" loop muted controls>
+          <source  v-bind:src="videos[0].video" type="video/mp4" />
         </video>
-
-        <span class="font-weight-bold">{{videos[0].views}} views </span>
+        <p v-if="flag">
+          <video class="video-fluid z-depth-1 mb-2" loop muted controls>
+          <source  v-bind:src="video.video" type="video/mp4" />
+        </video>
+        </p>
+        
+        <span v-if="!flag" class="font-weight-bold">{{videos[0].views}} views </span>
+        <span v-if="flag" class="font-weight-bold">{{video.views}} views </span>
         <span>
-          <img src="../assets/svg/thumbs_up.svg" alt="like"/><span class="pl-1 mr-4">35</span>
-          <img src="../assets/svg/thumbs_down.svg" alt="dislike"/><span class="pl-1"> 4</span>
+          <img v-bind:title="tooltip" v-on:click="likeVideo(video_id)" src="../assets/svg/thumbs_up.svg" alt="like"/>
+            <span class="pl-1 mr-4">{{likes}}</span>
+          <img v-on:click="dislikeVideo(video_id)" src="../assets/svg/thumbs_down.svg" alt="dislike"/>
+            <span class="pl-1"> {{dislikes}}</span>
         </span>
       </mdb-col>
+      
       <!-- small grids -->
       <mdb-col md="3" class="small-grids">
-        <mdb-card class="mb-4" v-for="video in videos" :key="video._id">
+        <mdb-card class="mb-4" v-for="video in videos" :key="video._id" v-on:click.native="getVideoById(video._id, getComments(video._id))">
           <mdb-card-image class="card-image" v-bind:src="video.thumb" v-bind:alt="video.title" v-bind:title="video.title"></mdb-card-image>
         </mdb-card>
       </mdb-col>
@@ -43,58 +53,37 @@
     <mdb-row class="cw-vid-comment">
       <mdb-col>
           <h5 class="py-3">Comments</h5>
-           <form class="comment-form">
-              <textarea type="text" id="post" name="post" class="form-control" placeholder="Type a sweet comment" rows="2"></textarea>
+           <div class="comment-form">
+              <textarea type="text" id="new-comment" v-model="comment" class="form-control" placeholder="Type a sweet comment" rows="2"></textarea>
 
               <div class="text-right mt-2">
-                  <button class="btn" type="submit">add comment<i class="far fa-paper-plane ml-2"></i></button>
+                  <button class="btn" type="submit" v-on:click="addComment(video_id)">add comment<i class="far fa-paper-plane ml-2"></i></button>
               </div>
                <!-- <div>
                   <button class="btn" type="submit">add comment<i class="far fa-paper-plane ml-2"></i></button>
               </div> -->
-          </form>
+          </div>
       </mdb-col>
     </mdb-row>
 
     <mdb-row class="cw-vid-comment cw-vid-comments mt-2">
-      <mdb-col class="col-9" >
+      <mdb-col class="col-9" v-for="comment in comments" :key="comment._id">
         <p class="mr-4">
-          <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20%286%29.jpg" alt="Card image cap"/>
+          <img src="../assets/png/placeholder_avatar.png" alt="placeholder avatar"/>
         </p>
         <p>
-          <span class="pr-2">Name</span> <b>5 minutes ago</b> <br/>
-          <span >Content of the comment Content of the comment Content of the comment Content of the commentContent of the comment Content of the comment</span>
+          <span class="pr-2">{{comment.author.name}}</span> <b>{{comment.createdAt | comment_moment}} </b> <br/>
+          <span>{{comment.content}}</span>
         </p>
       </mdb-col>
 
-      <mdb-col class="col-9" >
-        <p class="mr-4">
-          <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20%286%29.jpg" alt="Card image cap"/>
-        </p>
-        <p>
-          <span class="pr-2">Name</span> <b>5 minutes ago</b> <br/>
-          <span >Content of the comment Content of the comment Content of the comment Content of the commentContent of the comment Content of the comment</span>
-        </p>
-      </mdb-col>
-
-      <mdb-col class="col-9" >
-        <p class="mr-4">
-          <img src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20%286%29.jpg" alt="Card image cap"/>
-        </p>
-        <p>
-          <span class="pr-2">Name</span> <b>5 minutes ago</b> <br/>
-          <span >Content of the comment Content of the comment Content of the comment Content of the commentContent of the comment Content of the comment</span>
-        </p>
-      </mdb-col>
-
-      
       
     </mdb-row>
     
 
-    <div class="footer-copyright text-center p-4">
+    <div class="footer-copyright text-center p-4 mt-5">
       <mdb-container fluid>
-        <img style="width: 150px;" src="../assets/svg/powered_by_24g.svg" alt="footer image"/>
+        <img src="../assets/svg/powered_by_24g.svg" alt="footer image"/>
       </mdb-container>
     </div>  
   </div>
@@ -105,8 +94,10 @@
 
 <script>
 import VideoService from '../services/VideoService';
+import CommentService from '../services/CommentService';
+import SentimentService from '../services/SentimentService';
 import {mdbContainer, mdbTextarea, mdbBtn, mdbRow, mdbCol, mdbNavbar, mdbNavbarBrand, mdbCard, mdbCardImage} from 'mdbvue';
-
+import moment from 'moment';
 export default {
   name: 'HomeComponent',
   components: {
@@ -114,21 +105,90 @@ export default {
   },
   data(){
     return{
-      videos:[],
+      videos:[], video:[], comments:[],
       error: '',
       name: "Abdulrasheed Mustapha",
-      title:'',
-      views:''
+      comment:'', video_id:'',views:'',
+      flag: Boolean, 
+      likes: 0, dislikes:0,
     }
   },
   async created(){
     try {
       this.videos = await VideoService.getVideos();
       console.log(this.videos);
+      this.video_id = this.videos[0]._id;
+      this.getComments(this.video_id);
+      this.getLikes(this.video_id);
+      this.getDislikes(this.video_id);
+      this.flag = false;
     } catch (err) {
-
+      console.log(err);
     }
+  },
+  methods:{
+    getVideoById: async function (id, cb){
+      // alert(id);
+      this.video = [];
+      this.flag = false;
+      try {
+        this.video = await VideoService.getVideo(id);
+        this.video_id = this.video._id;
+        this.flag = true;
+        this.getLikes(this.video_id);
+        this.getDislikes(this.video_id)
+        cb;
+        console.log(this.video);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    getComments: async function(id){
+      try {
+        this.comments = await CommentService.getComments(id);
+        console.log(this.comments);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    addComment: async function(id){
+      await CommentService.insertComment(this.video_id, this.comment);
+      this.comments = await CommentService.getComments(id);
+      this.comment = '';
+    },
+    getLikes: async function(id){
+      try {
+        this.likes = await SentimentService.getLikes(id);
+        console.log(this.likes);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    getDislikes: async function(id){
+      try {
+        this.dislikes = await SentimentService.getDislikes(id);
+        console.log(this.dislikes);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    likeVideo: async function(id){
+      await SentimentService.likeAVideo(id);
+      this.likes = await SentimentService.getLikes(id);
+    },
+    dislikeVideo: async function(id){
+      await SentimentService.dislikeAVideo(id);
+      this.dislikes = await SentimentService.getDislikes(id);
+    }
+  },
+  filters: {
+    comment_moment: function (value){
+         if (value) {
+            return moment(String(value)).fromNow();
+          }
+      },
   }
+  
 }
 </script>
 
@@ -229,7 +289,7 @@ export default {
         font-family: brandon_med;
         color: #393C3E;
       }
-      form{
+      div.comment-form{
         textarea{
           resize: none;
           border-radius: 0px;
@@ -275,6 +335,12 @@ export default {
           font-size: 1.1rem;
         }
       }
+    }
+  }
+
+  .footer-copyright{
+    img{
+      width: 150px;
     }
   }
 }

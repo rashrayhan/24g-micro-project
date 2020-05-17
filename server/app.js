@@ -34,7 +34,8 @@ app.use('/api/sentiments', require('./routes/sentimentRoutes'));
 
 mongoose.connect(db, { 
     useNewUrlParser: true, 
-    useUnifiedTopology: true })
+    useUnifiedTopology: true,
+    useFindAndModify: false })
 .then(() => {
     app.listen(port, () => {
         console.log(`${db} Connected \nApp is running on port: ${port}`)
