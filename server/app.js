@@ -3,7 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require ('mongoose');
-const db = process.env.DATABASE_URL || 'mongodb://localhost:27017/moviesdb24g';
+const db = 'mongodb+srv://root:Wvt547UwHdr58zcU@cluster0-csdk7.mongodb.net/moviesdb24g?retryWrites=true&w=majority';
 const port = process.env.port || 4600;
 const fs = require("fs");
 const path = require("path");
