@@ -21,7 +21,7 @@ app.use(helmet());
 //logging to file
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
-//swagger
+//swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs)); 
 
 
@@ -31,6 +31,15 @@ app.use('/api/videos', require('./routes/videoRoutes'));
 app.use('/api/comments', require('./routes/commentRoutes'));
 app.use('/api/sentiments', require('./routes/sentimentRoutes'));
 
+
+//Production Environment
+if(process.env.NODE_ENV === 'production'){
+    //static folder
+    app.use(express.static(__dirname + '/public/'));
+
+    //SPA General Routing
+    app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+}
 
 mongoose.connect(db, { 
     useNewUrlParser: true, 

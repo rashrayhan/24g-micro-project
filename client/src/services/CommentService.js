@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:4600/api/comments/';
+const url = 'api/comments/';
 
 class CommentService{
   //Get Comment for a video
