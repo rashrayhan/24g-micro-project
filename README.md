@@ -18,13 +18,13 @@ Vues.js and Node(express) powered micro-website for playing videos with scalabil
 # System Setup Instruction: 24g-micro-project folder
 ## Kindly follow the following instructions to setup the system 
 * Open **24g-micro-project** folder with a code editor
-* Run _npm install_ without the '_'
+* Run _npm install_ 
 
 
 # Server Setup Instruction: 24g-micro-project/server
 ## Kindly follow the following instructions to setup the Express API
 * Open **24g-micro-project/server** folder with a code editor
-* Run _npm run devStart_ without the '_'
+* Run _npm run devStart_ 
 
 
 ## Server Reference
@@ -36,8 +36,8 @@ Vues.js and Node(express) powered micro-website for playing videos with scalabil
 # Client Setup Instruction: 24g-micro-project/client
 ## Kindly follow the following instructions to setup the Vue.js frontend
 * Open **24g-micro-project/client** folder with a code editor
-* Run _npm install_ without the '_'
-* Run _npm run start_ without the '_'
+* Run _npm install_ 
+* Run _npm run start_ 
 
 
 # Deployment Setup Instruction
