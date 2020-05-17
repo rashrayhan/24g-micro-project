@@ -24,6 +24,7 @@ $image-path: '~@/../mdb/mdbvue/img';
   font-family: brandon_reg;
   color: #393E3C;
   font-size: 1.3rem;
+ 
 }
 
 

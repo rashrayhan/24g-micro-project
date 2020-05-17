@@ -1,24 +1,8 @@
-# client
+# Client Setup Instruction: 24g-micro-project/client
 
-## Project setup
-```
-npm install
-```
+## Kindly follow the following instructions to setup the Vue.js frontend
+* Open **24g-micro-project/client** folder with a code editor
+* Run _npm install_ without the '_'
+* Run _npm run start_ without the '_'
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+_Thank **YOU** for reading me... System has started_

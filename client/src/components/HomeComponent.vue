@@ -1,9 +1,33 @@
 <template>
   <div fluid class="container-wrapper">
     <mdb-navbar class="cw-navbar">
-      <mdb-navbar-brand>
-        Welcome, <span>{{name}}</span>
-      </mdb-navbar-brand>
+      <div class="navbar-brand col-12" >
+        <mdb-row>
+          <mdb-col xs="6" class="pl-0">
+            Welcome, <span>{{name}}</span>
+          </mdb-col>
+          <mdb-col  xs="6" class="text-right">
+            <i class="far fa-user" v-on:click="systemUsers" title="change default system user"></i>
+          </mdb-col>
+        </mdb-row>
+
+          <!-- system user selection -->
+          <mdb-modal class="user-modal" side position="top-right" direction="right" :show="modal" @close="modal = false">
+            <mdb-modal-header>
+                <mdb-modal-title>System Users</mdb-modal-title>
+            </mdb-modal-header>
+            <mdb-modal-body>
+              <ol class="pl-5">
+                <li v-for="user in users" :key="user._id">{{user.name}}</li>
+              </ol>
+
+              <small> <span class="text-bold">NB:</span> Default user is {{name}}.<br/>Changeable from the API</small>
+            </mdb-modal-body>
+            <mdb-modal-footer>
+                <mdb-btn outline="danger" size="sm" @click.native="modal = false">Close</mdb-btn>
+            </mdb-modal-footer>
+        </mdb-modal>
+      </div>
     </mdb-navbar>
 
     <mdb-row class="cw-header">
@@ -23,19 +47,19 @@
     <mdb-row class="cw-vid-grid">
       <!-- main grid -->
       <mdb-col md="9" class=" mb-3 main-grid">
-         <video v-if="!flag" class="video-fluid z-depth-1 mb-2" loop muted controls>
+        <video v-if="!flag" class="video-fluid z-depth-1 mb-2"  loop controls>
           <source  v-bind:src="videos[0].video" type="video/mp4" />
         </video>
-        <p v-if="flag">
-          <video class="video-fluid z-depth-1 mb-2" loop muted controls>
-          <source  v-bind:src="video.video" type="video/mp4" />
-        </video>
+        <p v-else>
+          <video class="video-fluid z-depth-1 mb-2" mute loop controls>
+            <source  v-bind:src="video.video" type="video/mp4" />
+          </video>
         </p>
         
         <span v-if="!flag" class="font-weight-bold">{{videos[0].views}} views </span>
         <span v-if="flag" class="font-weight-bold">{{video.views}} views </span>
         <span>
-          <img v-bind:title="tooltip" v-on:click="likeVideo(video_id)" src="../assets/svg/thumbs_up.svg" alt="like"/>
+          <img v-on:click="likeVideo(video_id)" src="../assets/svg/thumbs_up.svg" alt="like"/>
             <span class="pl-1 mr-4">{{likes}}</span>
           <img v-on:click="dislikeVideo(video_id)" src="../assets/svg/thumbs_down.svg" alt="dislike"/>
             <span class="pl-1"> {{dislikes}}</span>
@@ -93,30 +117,33 @@
 
 
 <script>
+import UserService from '../services/UserService';
 import VideoService from '../services/VideoService';
 import CommentService from '../services/CommentService';
 import SentimentService from '../services/SentimentService';
-import {mdbContainer, mdbTextarea, mdbBtn, mdbRow, mdbCol, mdbNavbar, mdbNavbarBrand, mdbCard, mdbCardImage} from 'mdbvue';
+import {mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbTextarea, mdbBtn, mdbRow, mdbCol, mdbNavbar, mdbNavbarBrand, mdbCard, mdbCardImage} from 'mdbvue';
 import moment from 'moment';
 export default {
   name: 'HomeComponent',
   components: {
-    mdbContainer, mdbTextarea, mdbBtn, mdbRow, mdbCol, mdbNavbar, mdbNavbarBrand, mdbCard, mdbCardImage,
+    mdbContainer, mdbModal, mdbModalHeader, mdbModalTitle, mdbModalBody, mdbModalFooter, mdbTextarea, mdbBtn, mdbRow, mdbCol, mdbNavbar, mdbNavbarBrand, mdbCard, mdbCardImage,
   },
   data(){
     return{
-      videos:[], video:[], comments:[],
+      modal: false,
+      videos:[], video:[], comments:[], users:[],
       error: '',
       name: "Abdulrasheed Mustapha",
+      user_id:'',
       comment:'', video_id:'',views:'',
       flag: Boolean, 
-      likes: 0, dislikes:0,
+      likes: 0, dislikes:0
     }
   },
   async created(){
     try {
       this.videos = await VideoService.getVideos();
-      console.log(this.videos);
+      // console.log(this.videos);
       this.video_id = this.videos[0]._id;
       this.getComments(this.video_id);
       this.getLikes(this.video_id);
@@ -127,8 +154,11 @@ export default {
     }
   },
   methods:{
+    systemUsers: async function (){
+      this.users = await UserService.getUsers();
+      this.modal = true;
+    },
     getVideoById: async function (id, cb){
-      // alert(id);
       this.video = [];
       this.flag = false;
       try {
@@ -138,7 +168,6 @@ export default {
         this.getLikes(this.video_id);
         this.getDislikes(this.video_id)
         cb;
-        console.log(this.video);
       } catch (err) {
         console.log(err);
       }
@@ -146,20 +175,22 @@ export default {
     getComments: async function(id){
       try {
         this.comments = await CommentService.getComments(id);
-        console.log(this.comments);
       } catch (err) {
         console.log(err);
       }
     },
     addComment: async function(id){
-      await CommentService.insertComment(this.video_id, this.comment);
-      this.comments = await CommentService.getComments(id);
-      this.comment = '';
+      try {
+        await CommentService.insertComment(this.video_id, this.comment);
+        this.comments = await CommentService.getComments(id);
+        this.comment = '';
+      } catch (err) {
+        console.log(err);
+      }
     },
     getLikes: async function(id){
       try {
         this.likes = await SentimentService.getLikes(id);
-        console.log(this.likes);
       } catch (err) {
         console.log(err);
       }
@@ -167,18 +198,25 @@ export default {
     getDislikes: async function(id){
       try {
         this.dislikes = await SentimentService.getDislikes(id);
-        console.log(this.dislikes);
       } catch (err) {
         console.log(err);
       }
     },
     likeVideo: async function(id){
-      await SentimentService.likeAVideo(id);
-      this.likes = await SentimentService.getLikes(id);
+      try {
+        await SentimentService.likeAVideo(id);
+        this.likes = await SentimentService.getLikes(id);
+      } catch (err) {
+        console.log(err);
+      }
     },
     dislikeVideo: async function(id){
-      await SentimentService.dislikeAVideo(id);
-      this.dislikes = await SentimentService.getDislikes(id);
+      try {
+        await SentimentService.dislikeAVideo(id);
+        this.dislikes = await SentimentService.getDislikes(id);
+      } catch (err) {
+        console.log(err);
+      }
     }
   },
   filters: {
@@ -205,9 +243,22 @@ export default {
       font-family: brandon_light;
       font-size: inherit;
       color: #EBEBEB;
-      
+      padding: 0px;
+
       span{
         font-family: brandon_reg;
+      }
+      
+      i{
+        cursor: pointer;
+      }
+
+      .user-modal{
+        color: #393C3E;
+
+        .modal-title{
+          font-family: brandon_med;
+        }
       }
     }
     
@@ -299,8 +350,9 @@ export default {
 
         button{
           background: #E58C1B;
-          color: #EBEBEB;
+          color: #FFFFFF;
           letter-spacing: 1px;
+          padding: 25px 55px;
         }
       }
     }
@@ -387,6 +439,4 @@ export default {
   }
 
 }
-
-
 </style>

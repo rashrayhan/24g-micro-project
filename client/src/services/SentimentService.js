@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:4600/api/sentiments/';
+const url = 'api/sentiments/';
 
 class SentimentService{
   //Get Likes for a video
