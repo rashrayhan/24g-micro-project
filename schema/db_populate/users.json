@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "5ebc02886d2c1c5f48b97393"
+  },
+  "name": "Abdulrasheed Mustapha",
+  "email": "amustapha@24g.com",
+  "createdAt": {
+    "$date": "2020-05-13T14:22:00.716Z"
+  },
+  "updatedAt": {
+    "$date": "2020-05-13T14:22:00.716Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5ebc0344f965b920c822e59b"
+  },
+  "name": "Ryan Smith",
+  "email": "rsmith@24g.com",
+  "createdAt": {
+    "$date": "2020-05-13T14:25:08.912Z"
+  },
+  "updatedAt": {
+    "$date": "2020-05-13T14:25:08.912Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5ebfc7ca54213a33d4389399"
+  },
+  "name": "Jaan Raf",
+  "email": "jraf@24g.com",
+  "createdAt": {
+    "$date": "2020-05-16T11:00:26.979Z"
+  },
+  "updatedAt": {
+    "$date": "2020-05-16T11:00:26.979Z"
+  },
+  "__v": 0
+}]
