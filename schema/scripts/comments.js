@@ -1,0 +1,2 @@
+
+db.createCollection( 'comments', {validator: {$jsonSchema: {bsonType: 'object',required: [         'author',          'commentTo',          'content',          'createdAt',          'updatedAt',          '__v'],properties: {author: {bsonType: 'objectId'},commentTo: {bsonType: 'objectId'},content: {bsonType: 'string'},createdAt: {bsonType: 'date'},updatedAt: {bsonType: 'date'},__v: {bsonType: 'double'}}         }      }});  
