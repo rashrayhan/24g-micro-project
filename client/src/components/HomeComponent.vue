@@ -47,13 +47,13 @@
     <mdb-row class="cw-vid-grid">
       <!-- main grid -->
       <mdb-col md="9" class=" mb-3 main-grid">
-       <video v-if="!flag" class="video-fluid z-depth-1 mb-2" autoplay loop controls>
+        <video v-if="!flag" class="video-fluid z-depth-1 mb-2"  loop controls>
           <source  v-bind:src="videos[0].video" type="video/mp4" />
         </video>
-        <p v-if="flag">
-          <video class="video-fluid z-depth-1 mb-2" autoplay loop controls>
-          <source  v-bind:src="video.video" type="video/mp4" />
-        </video>
+        <p v-else>
+          <video class="video-fluid z-depth-1 mb-2" mute loop controls>
+            <source  v-bind:src="video.video" type="video/mp4" />
+          </video>
         </p>
         
         <span v-if="!flag" class="font-weight-bold">{{videos[0].views}} views </span>
@@ -158,7 +158,6 @@ export default {
       this.users = await UserService.getUsers();
       this.modal = true;
     },
-
     getVideoById: async function (id, cb){
       this.video = [];
       this.flag = false;
@@ -181,9 +180,13 @@ export default {
       }
     },
     addComment: async function(id){
-      await CommentService.insertComment(this.video_id, this.comment);
-      this.comments = await CommentService.getComments(id);
-      this.comment = '';
+      try {
+        await CommentService.insertComment(this.video_id, this.comment);
+        this.comments = await CommentService.getComments(id);
+        this.comment = '';
+      } catch (err) {
+        console.log(err);
+      }
     },
     getLikes: async function(id){
       try {
@@ -200,12 +203,20 @@ export default {
       }
     },
     likeVideo: async function(id){
-      await SentimentService.likeAVideo(id);
-      this.likes = await SentimentService.getLikes(id);
+      try {
+        await SentimentService.likeAVideo(id);
+        this.likes = await SentimentService.getLikes(id);
+      } catch (err) {
+        console.log(err);
+      }
     },
     dislikeVideo: async function(id){
-      await SentimentService.dislikeAVideo(id);
-      this.dislikes = await SentimentService.getDislikes(id);
+      try {
+        await SentimentService.dislikeAVideo(id);
+        this.dislikes = await SentimentService.getDislikes(id);
+      } catch (err) {
+        console.log(err);
+      }
     }
   },
   filters: {

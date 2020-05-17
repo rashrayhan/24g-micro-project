@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'api/videos/';
+const url = 'http://localhost:4600/api/videos/';
 
 class VideoService{
   //Get Videos
