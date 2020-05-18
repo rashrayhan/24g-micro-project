@@ -2,7 +2,7 @@
   "name": "24g-micro-project",
   "version": "1.0.0",
   "description": "Vues.js and Node(express) powered micro-website for playing videos",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node server/app.js",
     "devStart": "nodemon server/app.js"

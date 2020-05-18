@@ -15,8 +15,9 @@ POST http://localhost:4600/api/users/ HTTP/1.1
 content-type: application/json
 
 {
-    "name": "John Doe",
-    "email": "jdoe@24g.com"
+    "_id": "5ebfc7ca54213a33d4389399",
+  "name": "Jaan Raf",
+  "email": "jraf@24g.com"
 }
 
 
